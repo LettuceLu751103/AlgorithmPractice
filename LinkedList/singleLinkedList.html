@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+
+    function LinkedList() {
+
+      // 內部類
+      function Node(element) {
+        this.element = element
+        this.next = null
+      }
+
+      // 屬性
+      this.head = null
+      this.length = 0
+
+      // 1. append 方法
+      LinkedList.prototype.append = function (element) {
+        let newNode = new Node(element)
+        // 判斷是否第一個節點
+        if (this.length === 0) {
+          this.head = newNode
+        } else {
+          let current = this.head
+          while (current.next) {
+            console.log(current)
+            current = current.next
+          }
+          current.next = newNode
+
+        }
+
+        this.length += 1
+      }
+
+      // 2. toString 方法
+      LinkedList.prototype.toString = function () {
+        let current = this.head
+        let listString = ''
+        while (current) {
+          listString += current.element + ' '
+          current = current.next
+        }
+        return listString
+      }
+
+      // 3. insertAt 方法
+      LinkedList.prototype.insertAt = function (position, element) {
+        if (position < 0 || position > this.length) return false
+
+        let newNode = new Node(element)
+        if (position === 0) {
+          newNode.next = this.head
+          this.head = newNode
+        } else {
+          let index = 0
+          let current = this.head
+          let previouse = null
+          while (index++ < position) {
+            previouse = current
+            current = current.next
+          }
+
+          newNode.next = current
+          previouse.next = newNode
+        }
+
+        this.length += 1
+        return true
+      }
+
+      // 4. get 方法
+      LinkedList.prototype.get = function (position) {
+        if (position < 0 || position >= this.length) return null
+
+        let current = this.head
+        let index = 0
+        while (index++ < position) {
+          current = current.next
+        }
+        console.log(index)
+        return current.element
+      }
+
+      // 5. indexOf 方法
+      LinkedList.prototype.indexOf = function (element) {
+        let current = this.head
+        let index = 0
+
+        while (current) {
+          if (current.element === element) {
+            return index
+          }
+          current = current.next
+          index += 1
+        }
+
+        return -1
+      }
+
+      // 6. update 方法
+      LinkedList.prototype.update = function (position, element) {
+        if (position < 0 || position >= this.length) return false
+        let current = this.head
+        let previous = null
+        let index = 0
+        let newNode = new Node(element)
+        if (position === 0) {
+          newNode.next = current.next
+          this.head = newNode
+          return true
+        } else {
+          while (position > index) {
+            previouse = current
+            current = current.next
+            index += 1
+          }
+          current.element = element
+          return true
+        }
+      }
+
+      // 7. removeAt 方法
+      LinkedList.prototype.removeAt = function (position) {
+        if (position < 0 || position >= this.length) return false
+        let index = 0
+        let current = this.head
+        let previous = null
+        if (position === 0) {
+          this.head = current.next
+        } else {
+          while (index++ < position) {
+            previous = current
+            current = current.next
+          }
+          previous.next = current.next
+        }
+        this.length -= 1
+        return current.element
+      }
+
+
+      // 8. remove 方法
+      LinkedList.prototype.remove = function (element) {
+        // let newNode = new Node(element)
+        return this.removeAt(this.indexOf(element))
+      }
+
+      // 9. size 方法
+      LinkedList.prototype.size = function () {
+        return this.length
+      }
+      // 10. isEmpty 方法
+      LinkedList.prototype.isEmpty = function () {
+        if (this.length === 0) {
+          return true
+        } else {
+          return false
+        }
+      }
+
+    }
+
+
+    let newlist = new LinkedList()
+    newlist.append(1234)
+    newlist.append(5678)
+    newlist.append(1111)
+    console.log(newlist)
+    console.log('===============================')
+    console.log(newlist.toString())
+    console.log('===============================')
+    console.log(newlist.insertAt(0, 333))
+    console.log('===============================')
+    console.log(newlist.toString())
+    console.log('===============================')
+    console.log(newlist.get(3))
+    console.log('===============================')
+    console.log('查找元素下標')
+    console.log(newlist.indexOf(333))
+    console.log('===============================')
+    console.log(newlist.update(4, 'aaaa'))
+    console.log('===============================')
+    console.log(newlist.toString())
+    console.log('===============================')
+    console.log(newlist.removeAt(-1))
+    console.log('===============================')
+    console.log(newlist.toString())
+    console.log('===============================')
+    console.log(newlist.remove(1234))
+    console.log(newlist.remove(1111))
+    console.log(newlist.remove(333))
+    console.log(newlist.remove(5678))
+    console.log('===============================')
+    console.log(newlist.toString())
+    console.log('===============================')
+    console.log(newlist.size())
+    console.log('===============================')
+    console.log(newlist.isEmpty())
+    console.log('===============================')
+  </script>
+</body>
+
+</html>

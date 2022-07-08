@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+
+    function DualLinkedList() {
+
+      let Node = function (element) {
+        this.element = element
+        this.previous = null
+        this.next = null
+      }
+
+      this.length = 0
+      this.head = null
+      this.tail = null
+
+
+      // 1. append 方法
+      DualLinkedList.prototype.append = function (element) {
+        let newNode = new Node(element)
+        if (this.length === 0) {
+          this.head = newNode
+          this.tail = newNode
+        } else {
+          newNode.previous = this.tail
+          this.tail.next = newNode
+          this.tail = newNode
+        }
+        this.length += 1
+      }
+
+      // 2. toString 方法
+      DualLinkedList.prototype.forwardToString = function () {
+        let newString = ''
+        let current = this.head
+        while (current) {
+          newString += current.element + ' '
+          current = current.next
+        }
+        return newString
+      }
+
+      // 3. reverseToString 方法
+      DualLinkedList.prototype.reverseToString = function () {
+        let newString = ''
+        let current = this.tail
+        while (current) {
+          newString += current.element + ' '
+          current = current.previous
+        }
+        return newString
+      }
+
+      // 4. insertAt 方法
+      DualLinkedList.prototype.insertAt = function (position, element) {
+        let newNode = new Node(element)
+        let current = this.head
+        let index = 0
+
+        if (position < 0 || position > this.length) return false
+        console.log('傳入的position: ' + position + ' ,傳入的element: ' + element)
+        if (position === 0) {
+          console.log('### 插入頭部 ###')
+          current.previous = newNode
+          newNode.next = current
+          this.head = newNode
+        } else if (position === this.length) {
+          console.log('### 插入尾部 ###')
+          this.tail.next = newNode
+          newNode.previous = this.tail
+          this.tail = newNode
+        } else {
+          console.log('### 非頭部、尾部插入 ###')
+          if (position > this.length / 2) {
+            console.log('### 非頭部、尾部插入 - 後半部 ###')
+            let current = this.tail
+            let index = this.length - 1
+            while (index-- > position) {
+              current = current.previous
+            }
+            newNode.previous = current.previous
+            current.previous.next = newNode
+            newNode.next = current
+            console.log(current)
+          } else {
+            console.log('### 非頭部、尾部插入 - 前半部 ###')
+            while (index++ < position) {
+              current = current.next
+            }
+            newNode.previous = current.previous
+            current.previous.next = newNode
+            newNode.next = current
+          }
+        }
+
+        this.length += 1
+        return true
+      }
+
+
+      // 5. getElement 方法
+      DualLinkedList.prototype.getElement = function (position) {
+        if (position < 0 || position > this.length) return false
+        let current = this.head
+        let index = 0
+        while (current) {
+          if (index === position) {
+            return current.element
+          }
+          current = current.next
+          index += 1
+        }
+        return false
+      }
+
+      // 6. indexOf 方法
+      DualLinkedList.prototype.indexOf = function (element) {
+        let current = this.head
+        let index = 0
+        while (current.element !== element) {
+          current = current.next
+          index += 1
+          // console.log('index : ' + index)
+          if (current === null) {
+            return false
+          }
+        }
+
+        return index
+
+      }
+
+      // 7. update 方法
+      DualLinkedList.prototype.update = function (position, element) {
+        if (position < 0 || position > this.length) return false
+        let current = this.head
+        let index = 0
+        while (index++ < position) {
+          current = current.next
+          if (current.next === null) {
+            return false
+          }
+        }
+        current.element = element
+        return current
+      }
+
+      // 8. remove 方法
+      DualLinkedList.prototype.remove = function (element) {
+        let current = this.head
+        let index = 0
+        // console.log('傳進的 element : ' + element)
+        while (current) {
+
+          if (current.previous === null && current.element === element) {
+            // console.log('移除頭部元素')
+            this.head = current.next
+            current = this.head
+            this.length -= 1
+            return true
+          } else if (current.next === null && current.element === element) {
+            // console.log('移除尾部元素')
+            current.previous.next = null
+            this.tail = current.previous
+            this.length -= 1
+            return true
+          } else if (current.element === element) {
+            // console.log('移除其他元素')
+            current.previous.next = current.next
+            this.length -= 1
+            return true
+          }
+          current = current.next
+        }
+        return false
+      }
+
+      // 9. removeAt 方法
+      DualLinkedList.prototype.removeAt = function (position) {
+        // console.log(position)
+        // 1. 進行越界判斷
+        if (position < 0 || position >= this.length || position === undefined) return false
+        // 2. 變數宣告
+        let current = this.head
+        let index = 0
+        if (position === 0) {
+          this.head = current.next
+          this.length -= 1
+          return true
+        } else if (position === this.length - 1) {
+          // console.log('position: ' + position)
+          // console.log('this.length: ' + this.length)
+          // console.log(this.tail)
+          let current = this.tail
+
+          this.tail = current.previous
+          this.tail.next = null
+          // console.log(this.tail)
+          this.length -= 1
+          return true
+        } else {
+          while (index++ < position) {
+            if (current === null) {
+              return false
+            }
+            current = current.next
+          }
+          current.previous.next = current.next
+          this.length -= 1
+          return true
+        }
+
+      }
+
+      // 10. size 方法
+      DualLinkedList.prototype.size = function () {
+        return this.length
+      }
+
+      // 11. isEmpty 方法
+      DualLinkedList.prototype.isEmpty = function () {
+        return (this.size() === 0)
+      }
+
+    }
+
+
+    let dualLinkedList = new DualLinkedList()
+    // dualLinkedList.append(1234)
+
+    // dualLinkedList.append(5678)
+
+    // dualLinkedList.append(1111)
+
+    // dualLinkedList.append('aaaa')
+    // console.log(dualLinkedList)
+    // console.log('==== 正向列出 LinkedList ====')
+    // console.log(dualLinkedList.forwardToString())
+    // console.log('==== 反向列出 LinkedList ====')
+    // console.log(dualLinkedList.reverseToString())
+    // console.log('==== 插入 LinkedList ====')
+    // console.log(dualLinkedList.insertAt(4, 13579))
+    // console.log('==== 正向列出 LinkedList ====')
+    // console.log(dualLinkedList.forwardToString())
+    // console.log('==== 從 LinkedList 選出元素值 ====')
+    // console.log(dualLinkedList.getElement(3))
+    // console.log('==== 從 LinkedList 查出元素 index 值 ====')
+    // console.log(dualLinkedList.indexOf(0000))
+    // console.log('==== 從 LinkedList 更新元素 ====')
+    // console.log(dualLinkedList.update(0, 'TTTT'))
+    // console.log('==== 正向列出 LinkedList ====')
+    // console.log(dualLinkedList.forwardToString())
+    // console.log('==== 從 LinkedList 移除元素 ====')
+    // console.log(dualLinkedList.remove(1111))
+    // console.log('==== 正向列出 LinkedList ====')
+    // console.log(dualLinkedList.forwardToString())
+    // console.log('==== 從 LinkedList 用 index 移除元素 ====')
+    // console.log(dualLinkedList.removeAt())
+    // console.log('==== 正向列出 LinkedList ====')
+    // console.log(dualLinkedList.forwardToString())
+    console.log('==== 列出 LinkedList 長度 ====')
+    console.log(dualLinkedList.size())
+    console.log('==== 判斷 LinkedList 是否為空 ====')
+    console.log(dualLinkedList.isEmpty())
+
+  </script>
+</body>
+
+</html>
