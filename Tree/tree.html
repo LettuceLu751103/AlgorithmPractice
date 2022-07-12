@@ -19,6 +19,7 @@
         this.right = null
       }
 
+      // 插入
       BinerySearchTree.prototype.insert = function (key) {
         // console.log('傳進來的值 key: ' + key)
         let newNode = new Node(key)
@@ -52,6 +53,7 @@
         this.preOrderTraversalNode(this.root, callback)
       }
 
+      // 先序循環
       BinerySearchTree.prototype.preOrderTraversalNode = function (node, callback) {
         if (node !== null) {
           callback(node.key)
@@ -111,6 +113,86 @@
       }
 
 
+      // 尋找特定數值
+      BinerySearchTree.prototype.search = function (key) {
+        let node = this.root
+        // console.log('傳進來要尋找的數值 key: ' + key)
+        while (node !== null) {
+          if (key < node.key) {
+            // console.log('傳進來要尋找的數值比當前小, 當前 key: ' + node.key + ' 尋找 key: ' + key)
+            node = node.left
+          } else if (key > node.key) {
+            // console.log('傳進來要尋找的數值比當前大, 當前 key: ' + node.key + ' 尋找 key: ' + key)
+            node = node.right
+          } else {
+            // console.log('要尋找的數值已在當前樹中找到!!!')
+            return true
+          }
+        }
+        // console.log('要尋找的數值, 未在當前樹中找到!!!')
+        return false
+      }
+
+      // 刪除一個節點
+      BinerySearchTree.prototype.remove = function (key) {
+        this.removeNode(this.root, key)
+      }
+
+
+      BinerySearchTree.prototype.findMinNode = function (node) {
+        // console.log('傳進來的 key: ' + node.key)
+        while (node.left !== null) {
+          // console.log(node.key)
+          node = node.left
+        }
+        return node
+
+      }
+
+      BinerySearchTree.prototype.removeNode = function (node, key) {
+        // console.log('進入 removeNode 函數')
+
+        if (node === null) {
+          return null
+        }
+
+        if (key < node.key) {
+          node.left = this.removeNode(node.left, key)
+        } else if (key > node.key) {
+          node.right = this.removeNode(node.right, key)
+        } else {
+          // 1. 找到要刪除的子節點, 其左子節點為 null , 右子節點為 null
+          if (node.right === null && node.left === null) {
+            node = null
+            console.log('刪除成功')
+            console.log(node)
+            console.log('刪除成功')
+            return node
+          }
+
+          // 2. 找到要刪除的子節點, 其左子節點為 null, or 右子節點為 null
+          if (node.left === null) {
+            node = node.right
+            return node
+          } else if (node.right === null) {
+            node = node.left
+            return node
+          }
+
+          // 3. 找到要刪除的子節點, 其左子節點與右子節點不為 null
+          let newNode = this.findMinNode(node.right)
+          node.key = newNode.key
+          console.log('傳進去的 node: ')
+          console.log(node.right)
+          console.log('傳進去的 key: ')
+          console.log(newNode.key)
+          node.right = this.removeNode(node.right, newNode.key)
+          console.log('刪除的 key: ' + newNode.key)
+          console.log(node)
+          return node
+        }
+      }
+
 
 
       this.root = null
@@ -118,6 +200,7 @@
 
     let bst = new BinerySearchTree()
 
+    console.log('==== 插入節點 ====')
     console.log(bst.insert(11))
     console.log(bst.insert(7))
     console.log(bst.insert(15))
@@ -135,26 +218,37 @@
     console.log(bst.insert(6))
 
     console.log('==== 前序循環 ====')
-    console.log(bst.preOrderTraversal(function (value) {
-      console.log(value)
-    }))
+    // console.log(bst.preOrderTraversal(function (value) {
+    //   console.log(value)
+    // }))
 
     console.log('==== 中序循環 ====')
-    console.log(bst.inOrderTraversal(function (value) {
-      console.log(value)
-    }))
+    // console.log(bst.inOrderTraversal(function (value) {
+    //   console.log(value)
+    // }))
 
     console.log('==== 後序循環 ====')
-    console.log(bst.postOrderTraversal(function (value) {
-      console.log(value)
-    }))
+    // console.log(bst.postOrderTraversal(function (value) {
+    //   console.log(value)
+    // }))
 
     console.log('==== 當前樹中最大值 ====')
-    console.log(bst.max())
+    // console.log(bst.max())
 
     console.log('==== 當前樹中最小值 ====')
-    console.log(bst.min())
+    // console.log(bst.min())
 
+    console.log('==== 尋找特定數值 ====')
+    // console.log(bst.search(6))
+
+    console.log('==== 尋找某樹的最小值 ====')
+    // console.log(bst)
+    console.log(bst.findMinNode(bst.root))
+
+
+    console.log('==== 刪除某樹的值 ====')
+    console.log(bst.remove(11))
+    console.log(bst)
   </script>
 </body>
 
